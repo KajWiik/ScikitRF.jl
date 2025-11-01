@@ -1,3 +1,5 @@
+WARNING: this is vibe-coded package and not yet tested, beware!
+
 # ScikitRF.jl
 
 A comprehensive Julia wrapper for the [scikit-rf](https://github.com/scikit-rf/scikit-rf) Python library, providing full access to RF and microwave network analysis tools.
