@@ -1,5 +1,5 @@
 name = "ScikitRF"
-uuid = "8c4e4b0b-8e8e-4b0e-8e8e-8c4e4b0b8e8e"
+uuid = "184cce4a-7cfb-4693-b3a1-b2de2ed18b16"
 authors = ["ScikitRF.jl contributors"]
 version = "0.1.0"
 
