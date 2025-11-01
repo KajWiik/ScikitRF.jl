@@ -1,0 +1,28 @@
+# Julia
+*.jl.*.cov
+*.jl.cov
+*.jl.mem
+/Manifest.toml
+
+# CondaPkg files (managed by PythonCall)
+.CondaPkg/
+
+# Compiled files
+*.ji
+*.o
+*.so
+
+# Build artifacts
+deps/build.log
+deps/deps.jl
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
