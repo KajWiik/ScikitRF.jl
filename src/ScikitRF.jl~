@@ -1,0 +1,5 @@
+module ScikitRF
+
+greet() = print("Hello World!")
+
+end # module ScikitRF
