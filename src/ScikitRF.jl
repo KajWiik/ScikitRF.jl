@@ -6,7 +6,9 @@ using Reexport
 
 const skrf = PythonCall.pynew()
 
-ScikitRF() = PythonCall.pynew()
+struct ScikitRF
+    ScikitRF() = PythonCall.pynew()
+end
 
 function __init__()
     PythonCall.pycopy!(skrf, pyimport("skrf"))
