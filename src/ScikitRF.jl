@@ -4,13 +4,6 @@ using Reexport
 
 @reexport using PythonCall
 
-const skrf = PythonCall.pynew()
-
-function __init__()
-    PythonCall.pycopy!(skrf, pyimport("skrf"))
-end
-
-
 macro pywrapper(typename, pytype)
     quote
         struct $(esc(typename))
@@ -25,11 +18,31 @@ macro pywrapper(typename, pytype)
     end
 end
 
-@pywrapper Network Network
+struct ScikitRF
+    py::Py
+    function ScikitRF()
+        new(pyimport("skrf"))
+    end
+end
 
-Network() = Network(skrf.Network())
+Base.getproperty(x::ScikitRF, name::Symbol) = 
+    name === :py ? getfield(x, :py) : getproperty(getfield(x, :py), name)
 
-export skrf, ScikitRF, Network
+struct Network
+    py::Py
+    Network(py::Py) = new(py)
+    function Network(args...; kwargs...)
+        new(pyimport("skrf").Network(args...; kwargs...))
+    end
+end
+
+Base.getproperty(x::Network, name::Symbol) = 
+    name === :py ? getfield(x, :py) : getproperty(getfield(x, :py), name)
+
+Base.convert(::Type{Py}, x::Network) = getfield(x, :py)
+Base.convert(::Type{Network}, x::Py) = Network(x)
+
+export ScikitRF, Network
 
 
 end # module ScikitRF
