@@ -49,4 +49,20 @@ Base.convert(::Type{Network}, x::Py) = Network(x)
 
 export Network
 
+struct Frequency
+    py::Py
+    Frequency(py::Py) = new(py)
+    function Frequency(args...; kwargs...)
+        new(skrf.Frequency(args...; kwargs...))
+    end
+end
+
+Base.getproperty(x::Frequency, name::Symbol) = 
+    name === :py ? getfield(x, :py) : getproperty(getfield(x, :py), name)
+
+Base.convert(::Type{Py}, x::Frequency) = getfield(x, :py)
+Base.convert(::Type{Frequency}, x::Py) = Frequency(x)
+
+export Frequency
+
 end # module ScikitRF
