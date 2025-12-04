@@ -4,17 +4,46 @@ using Reexport
 
 @reexport using PythonCall
 
-macro pywrapper(typename, pytype)
+"""
+    @skrf_wrapper TypeName
+
+Generate a Julia wrapper struct for a scikit-rf Python class.
+
+Creates a struct with:
+- An inner `py::Py` field to hold the Python object
+- Constructor from `Py` object
+- Constructor that forwards args/kwargs to `skrf.TypeName(...)`
+- Property delegation to the Python object
+- Type conversions between Julia wrapper and `Py`
+
+# Example
+```julia
+@skrf_wrapper Network
+# Generates wrapper for skrf.Network
+
+# Usage:
+net = Network("myfile.s2p")  # Calls skrf.Network("myfile.s2p")
+net.frequency                 # Accesses net.py.frequency
+```
+"""
+macro skrf_wrapper(typename)
+    pyclass = esc(typename)
     quote
-        struct $(esc(typename))
+        struct $(pyclass)
             py::Py
+            $(pyclass)(py::Py) = new(py)
+            function $(pyclass)(args...; kwargs...)
+                new(skrf.$(typename)(args...; kwargs...))
+            end
         end
         
-        Base.getproperty(x::$(esc(typename)), name::Symbol) = 
+        Base.getproperty(x::$(pyclass), name::Symbol) = 
             name === :py ? getfield(x, :py) : getproperty(getfield(x, :py), name)
         
-        Base.convert(::Type{Py}, x::$(esc(typename))) = getfield(x, :py)
-        Base.convert(::Type{$(esc(typename))}, x::Py) = $(esc(typename))(x)
+        Base.convert(::Type{Py}, x::$(pyclass)) = getfield(x, :py)
+        Base.convert(::Type{$(pyclass)}, x::Py) = $(pyclass)(x)
+        
+        export $(pyclass)
     end
 end
 
@@ -65,4 +94,9 @@ Base.convert(::Type{Frequency}, x::Py) = Frequency(x)
 
 export Frequency
 
+# Test example of the @skrf_wrapper macro (not yet applied to Network/Frequency)
+# Uncomment to test:
+# @skrf_wrapper Media
+
 end # module ScikitRF
+
