@@ -94,6 +94,11 @@ Base.convert(::Type{Frequency}, x::Py) = Frequency(x)
 
 export Frequency
 
+# Export the skrf module for direct access to Python classes and their class methods
+# This allows users to call: skrf.Frequency.from_f(...) for class methods
+# while still using the Julia wrappers: Frequency(...) for instances
+export skrf
+
 # Test example of the @skrf_wrapper macro (not yet applied to Network/Frequency)
 # Uncomment to test:
 # @skrf_wrapper Media

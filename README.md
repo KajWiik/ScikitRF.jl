@@ -38,11 +38,44 @@ using ScikitRF
 
 ## Usage
 
+### Basic Usage
+
 ```julia
 using ScikitRF
 
-# Create a network
+# Create a network using the Julia wrapper
 net = Network(name="my_network")
+
+# Access Python class methods directly via skrf module
+freq = skrf.Frequency.from_f([1e9, 2e9, 3e9])  # Create frequency from array
+
+# You can also use the Frequency wrapper for instances
+freq2 = Frequency(start=1, stop=10, npoints=101, unit="GHz")
+```
+
+### Accessing Class Methods
+
+Some scikit-rf classes have class methods (like `Frequency.from_f`). To use these, access them through the exported `skrf` module:
+
+```julia
+# ✓ Correct - use skrf.ClassName.class_method
+freq = skrf.Frequency.from_f([1e9, 2e9, 3e9])
+
+# ✗ Won't work - Frequency is a Julia wrapper, not the Python class
+# freq = Frequency.from_f([1e9, 2e9, 3e9])  
+```
+
+### Full scikit-rf Access
+
+The `skrf` module gives you access to all scikit-rf functionality:
+
+```julia
+# Access any scikit-rf class or function
+media = skrf.Media()
+cal = skrf.Calibration()
+
+# Use scikit-rf functions
+result = skrf.network.connect(net1, 0, net2, 0)
 ```
 
 ## Requirements
